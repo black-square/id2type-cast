@@ -101,7 +101,7 @@ struct Data
     template<class Archive>
     void Serialize(Archive & archive)
     {
-        archive & a & pBase &pRegData;
+        archive & a & pBase & pRegData;
     }
 };
 
@@ -150,7 +150,7 @@ void SerializationTestImpl( int curType )
         std::cout << rawData << std::endl;
     }
 
-    std::cout << std::endl << "Read from rawData clear object" << std::endl;
+    std::cout << std::endl << "Read from rawData clean object" << std::endl;
 
     {
         Data data;

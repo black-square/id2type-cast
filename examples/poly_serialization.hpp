@@ -61,14 +61,12 @@ namespace detail
 
             if( pT != 0 )
             {
-                char nullTag = 'G';
-                archive & nullTag;
+                archive & 'G';
                 pT->Serialize( archive );
             }
             else
             {
-                char nullTag = 'N';
-                archive & nullTag;
+                archive & 'N';
             }
         }
 
@@ -84,8 +82,7 @@ namespace detail
             }
             else
             {
-                int typeTag = -1;
-                archive & typeTag;
+                archive & -1;
             } 
         }
 
@@ -140,7 +137,7 @@ namespace detail
 
             if( typeTag >= 0 )
             {
-                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, serialization_visitor_read<T>(archive, pT), pT ); 
+                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, serialization_visitor_read<T>(archive, pT) ); 
             }
             else
             {
@@ -181,7 +178,7 @@ namespace detail
             serialization_visitor_read( DerivedT &archive, TCurr *&pCur ): m_archive(archive), m_pCur(pCur) {}
 
             template<class T>
-            void exec( T * ) const
+            void exec( const T * ) const
             {
                 T * const pNew = m_pCur != 0 ?
                     i2tc::id2type_cast< creation_visitor<T> >( m_pCur ):
