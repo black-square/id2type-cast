@@ -147,8 +147,8 @@ void test()
     const int PacketNum = static_cast<int>(std::time(NULL) % COUNT); 
     
     void * const ptr = id2type_cast<PT, CreateVisitor>( PacketNum );
-    const int rez = id2type_cast<PT>( PacketNum, CallVisitor(), static_cast<const void *>(ptr) );
-    id2type_cast<PT>( PacketNum,  DestroyVisitor(), ptr );
+    const int rez = id2type_cast<PT, CallVisitor>( PacketNum, ptr );
+    id2type_cast<PT, DestroyVisitor>( PacketNum, ptr );
 
     std::cout << "Result " << rez << std::endl;
 }

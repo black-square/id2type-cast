@@ -85,7 +85,7 @@ namespace detail
             struct yes { char a; };
             struct no { yes a[2]; };
             static no test(...);
-            template<class TypeList, class ImplTag> static yes test( embedded_type_id_base<TypeList, ImplTag> * );
+            template<class TypeList, class ImplTag> static yes test( const embedded_type_id_base<TypeList, ImplTag> * );
             static T *make_t();
         };
 
@@ -104,6 +104,22 @@ typename Visitor::return_value id2type_cast( embedded_type_id_base<TypeList, Imp
 
 template<class Visitor, class TypeList, class ImplTag>
 typename Visitor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, const Visitor &visitor )
+{           
+    assert( type != 0 );
+    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+}
+///////////////////////////////////////////////////////////////////////////////
+
+template<class Visitor, class TypeList, class ImplTag>
+typename Visitor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type, const Visitor &visitor )
+{           
+    assert( type != 0 );
+    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+}
+///////////////////////////////////////////////////////////////////////////////
+
+template<class Visitor, class TypeList, class ImplTag>
+typename Visitor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, Visitor &visitor )
 {           
     assert( type != 0 );
     return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 

@@ -50,6 +50,12 @@ namespace i2tc
     }
 
     template<class TypeList, class Visitor>
+    typename Visitor::return_value id2type_cast( id_type n, Visitor &visitor )
+    {
+        return id2type_cast<TypeList>( n, visitor, static_cast<const void *>(0) ); 
+    }
+
+    template<class TypeList, class Visitor>
     typename Visitor::return_value id2type_cast( id_type n, const Visitor &visitor )
     {
         return id2type_cast<TypeList>( n, visitor, static_cast<const void *>(0) ); 

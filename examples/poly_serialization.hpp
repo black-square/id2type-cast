@@ -12,7 +12,7 @@ namespace detail
     template<class DerivedT>
     struct serializer_base
     {
-        template< class T>
+        template< class T >
         DerivedT &operator&( T &t )
         {
             DerivedT *const pThis = static_cast<DerivedT *>(this);
@@ -20,6 +20,13 @@ namespace detail
             return *pThis;
         }
 
+        template< class T >
+        DerivedT &operator&( const T &t )
+        {
+            DerivedT *const pThis = static_cast<DerivedT *>(this);
+            pThis->process(t);
+            return *pThis;
+        }
 
         template< class T>
         DerivedT &operator&( T *&t )
@@ -72,10 +79,8 @@ namespace detail
 
             if( pT != 0 )
             {
-                int typeTag = pT->i2tc_get_id();
-                archive & typeTag;
-                serializer_write_visitor visitor(archive);
-                i2tc::id2type_cast( pT, visitor );
+                archive & pT->i2tc_get_id();
+                i2tc::id2type_cast( pT, serializer_write_visitor(archive) );
             }
             else
             {
@@ -135,8 +140,7 @@ namespace detail
 
             if( typeTag >= 0 )
             {
-                serialization_visitor_read<T> visitor(archive, pT);
-                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, visitor, pT ); 
+                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, serialization_visitor_read<T>(archive, pT), pT ); 
             }
             else
             {
