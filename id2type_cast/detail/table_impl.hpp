@@ -5,18 +5,18 @@
 
 namespace i2tc { namespace detail {
 
-template<class Visitor, class TypeList, class Base>
+template<class Functor, class TypeList, class Base>
 class table_impl
 {
 public:
-    typedef Visitor &visitor_ref;
-    typedef typename Visitor::return_value return_value;
+    typedef Functor &functor_ref;
+    typedef typename Functor::return_value return_value;
     typedef Base *base_type_ptr;
 
 public:
-    static return_value cast( id_type n, base_type_ptr type, visitor_ref visitor )
+    static return_value cast( id_type n, base_type_ptr type, functor_ref functor )
     {
-        return (*m_map_data.get_func(n))( visitor, type ); 
+        return (*m_map_data.get_func(n))( functor, type ); 
     }
 
 private:
@@ -25,11 +25,11 @@ private:
 };
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class Base >
-class table_impl<Visitor, TypeList, Base>::map_data
+template<class Functor, class TypeList, class Base >
+class table_impl<Functor, TypeList, Base>::map_data
 {
 public:
-    typedef return_value (*mapped_function)( visitor_ref visitor, base_type_ptr type );
+    typedef return_value (*mapped_function)( functor_ref functor, base_type_ptr type );
     enum { types_count = type_list::size<TypeList>::value };
 public:
     map_data()
@@ -47,10 +47,10 @@ public:
 
 private:
     template<class RealTypeT>
-    static return_value convert_impl( visitor_ref visitor, base_type_ptr type )
+    static return_value convert_impl( functor_ref functor, base_type_ptr type )
     {
         typedef typename detail::select<detail::is_const<Base>::value, const RealTypeT, RealTypeT>::result cast_type;
-        return visitor.exec( static_cast<cast_type *>(type) );
+        return functor( static_cast<cast_type *>(type) );
     }
 
     template<id_type N>
@@ -71,9 +71,9 @@ private:
 };
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class Base >
-const typename table_impl<Visitor, TypeList, Base>::map_data 
-    table_impl<Visitor, TypeList, Base>::m_map_data;
+template<class Functor, class TypeList, class Base >
+const typename table_impl<Functor, TypeList, Base>::map_data 
+    table_impl<Functor, TypeList, Base>::m_map_data;
 
 }}
 

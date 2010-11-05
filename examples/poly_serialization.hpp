@@ -78,7 +78,7 @@ namespace detail
             if( pT != 0 )
             {
                 archive & pT->i2tc_get_id();
-                i2tc::id2type_cast( pT, serializer_write_visitor(archive) );
+                i2tc::id2type_cast( pT, serializer_write_functor(archive) );
             }
             else
             {
@@ -87,19 +87,19 @@ namespace detail
         }
 
     private:
-        struct serializer_write_visitor: i2tc::visitor_base<>
+        struct serializer_write_functor: i2tc::function<>
         {
             DerivedT &m_archive;
-            serializer_write_visitor( DerivedT &archive ): m_archive(archive) {}
+            serializer_write_functor( DerivedT &archive ): m_archive(archive) {}
 
             template<class T>
-            void exec( T *t ) const
+            void operator()( T *t ) const
             {
                 t->Serialize( m_archive );
             }
 
         private:
-            serializer_write_base &operator=( const serializer_write_visitor & );
+            serializer_write_base &operator=( const serializer_write_functor & );
         };
     };
     ///////////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ namespace detail
 
             if( typeTag >= 0 )
             {
-                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, serialization_visitor_read<T>(archive, pT) ); 
+                i2tc::id2type_cast<typename T::i2tc_type_list>( typeTag, serialization_functor_read<T>(archive, pT) ); 
             }
             else
             {
@@ -148,7 +148,7 @@ namespace detail
 
     private:
         template < class DstT >
-        struct creation_visitor: i2tc::visitor_base<DstT *>
+        struct creation_functor: i2tc::function<DstT *>
         {
             template<class RealT>
             static DstT *createImpl( RealT *pCur, i2tc::detail::int2type<true> )
@@ -164,24 +164,24 @@ namespace detail
             }
 
             template<class RealT>
-            DstT *exec( RealT *pCur ) const
+            DstT *operator()( RealT *pCur ) const
             {
                 return createImpl( pCur, i2tc::detail::int2type<i2tc::detail::is_same_type<DstT, RealT>::value>() );
             }
         };
 
         template< class TCurr >
-        struct serialization_visitor_read: i2tc::visitor_base<>
+        struct serialization_functor_read: i2tc::function<>
         {
             DerivedT &m_archive;
             TCurr *&m_pCur;
-            serialization_visitor_read( DerivedT &archive, TCurr *&pCur ): m_archive(archive), m_pCur(pCur) {}
+            serialization_functor_read( DerivedT &archive, TCurr *&pCur ): m_archive(archive), m_pCur(pCur) {}
 
             template<class T>
-            void exec( const T * ) const
+            void operator()( const T * ) const
             {
                 T * const pNew = m_pCur != 0 ?
-                    i2tc::id2type_cast< creation_visitor<T> >( m_pCur ):
+                    i2tc::id2type_cast< creation_functor<T> >( m_pCur ):
                     new T;
 
                 pNew->Serialize( m_archive );
@@ -189,7 +189,7 @@ namespace detail
             }
 
         private:
-            serialization_visitor_read &operator=( const serialization_visitor_read & );
+            serialization_functor_read &operator=( const serialization_functor_read & );
         };
         
         protected:

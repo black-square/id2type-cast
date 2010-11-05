@@ -94,51 +94,51 @@ namespace detail
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type, Visitor &visitor )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type, Functor &functor )
 {
     assert( type != 0 );
-    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+    return id2type_cast<TypeList>( type->i2tc_get_id(), functor, type ); 
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, const Visitor &visitor )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, const Functor &functor )
 {           
     assert( type != 0 );
-    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+    return id2type_cast<TypeList>( type->i2tc_get_id(), functor, type ); 
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type, const Visitor &visitor )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type, const Functor &functor )
 {           
     assert( type != 0 );
-    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+    return id2type_cast<TypeList>( type->i2tc_get_id(), functor, type ); 
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, Visitor &visitor )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type, Functor &functor )
 {           
     assert( type != 0 );
-    return id2type_cast<TypeList>( type->i2tc_get_id(), visitor, type ); 
+    return id2type_cast<TypeList>( type->i2tc_get_id(), functor, type ); 
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( embedded_type_id_base<TypeList, ImplTag> *type )
 {
     assert( type != 0 );
-    return id2type_cast<TypeList, Visitor>( type->i2tc_get_id(), type ); 
+    return id2type_cast<TypeList, Functor>( type->i2tc_get_id(), type ); 
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class Visitor, class TypeList, class ImplTag>
-typename Visitor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type )
+template<class Functor, class TypeList, class ImplTag>
+typename Functor::return_value id2type_cast( const embedded_type_id_base<TypeList, ImplTag> *type )
 {
     assert( type != 0 );
-    return id2type_cast<TypeList, Visitor>( type->i2tc_get_id(), type ); 
+    return id2type_cast<TypeList, Functor>( type->i2tc_get_id(), type ); 
 }
 
 }

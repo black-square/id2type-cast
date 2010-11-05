@@ -105,10 +105,10 @@ struct Data
     }
 };
 
-struct CreateVisitor: i2tc::visitor_base<BaseData *>
+struct CreateFunctor: i2tc::function<BaseData *>
 {
     template<class T>
-    BaseData *exec( const T * ) const
+    BaseData *operator()( const T * ) const
     {
         return new T;
     }
@@ -127,7 +127,7 @@ void initBaseImpl( Data &data, int curType )
 {
     if( curType != i2tc::type_list::size<DataTypes>::value )
     {
-        data.pBase = id2type_cast<DataTypes, CreateVisitor>( curType );
+        data.pBase = id2type_cast<DataTypes, CreateFunctor>( curType );
         data.pRegData = new RegularData;
     }
 }

@@ -9,21 +9,23 @@
 namespace i2tc
 {
     template<class ReturnValue = void>
-    struct visitor_base
+    struct function
     {
         typedef ReturnValue return_value;
     };
     
+    ///////////////////////////////////////////////////////////////////////////////
+
     struct table_impl_tag 
     {
-        template<class Visitor, class TypeList, class Base>
-        struct rebind { typedef detail::table_impl<Visitor, TypeList, Base> type; };
+        template<class Functor, class TypeList, class Base>
+        struct rebind { typedef detail::table_impl<Functor, TypeList, Base> type; };
     };
 
     struct switch_impl_tag 
     {
-        template<class Visitor, class TypeList, class Base>
-        struct rebind { typedef detail::switch_impl<Visitor, TypeList, Base> type; };
+        template<class Functor, class TypeList, class Base>
+        struct rebind { typedef detail::switch_impl<Functor, TypeList, Base> type; };
     };
     
     namespace type_list
@@ -35,44 +37,46 @@ namespace i2tc
         };
     }
 
-    template<class TypeList, class Visitor, class Base>
-    typename Visitor::return_value id2type_cast( id_type n, Visitor &visitor, Base *type )
+    ///////////////////////////////////////////////////////////////////////////////
+
+    template<class TypeList, class Functor, class Base>
+    typename Functor::return_value id2type_cast( id_type n, Functor &functor, Base *type )
     {
-        typedef typename TypeList::id2type_cast_impl_tag::template rebind<Visitor, TypeList, Base>::type impl_type;
-        return impl_type::cast( n, type, visitor ); 
+        typedef typename TypeList::id2type_cast_impl_tag::template rebind<Functor, TypeList, Base>::type impl_type;
+        return impl_type::cast( n, type, functor ); 
     }
 
-    template<class TypeList, class Visitor, class Base>
-    typename Visitor::return_value id2type_cast( id_type n, const Visitor &visitor, Base *type )
+    template<class TypeList, class Functor, class Base>
+    typename Functor::return_value id2type_cast( id_type n, const Functor &functor, Base *type )
     {
-        typedef typename TypeList::id2type_cast_impl_tag::template rebind<const Visitor, TypeList, Base>::type impl_type;
-        return impl_type::cast( n, type, visitor ); 
+        typedef typename TypeList::id2type_cast_impl_tag::template rebind<const Functor, TypeList, Base>::type impl_type;
+        return impl_type::cast( n, type, functor ); 
     }
 
-    template<class TypeList, class Visitor>
-    typename Visitor::return_value id2type_cast( id_type n, Visitor &visitor )
+    template<class TypeList, class Functor>
+    typename Functor::return_value id2type_cast( id_type n, Functor &functor )
     {
-        return id2type_cast<TypeList>( n, visitor, static_cast<const void *>(0) ); 
+        return id2type_cast<TypeList>( n, functor, static_cast<const void *>(0) ); 
     }
 
-    template<class TypeList, class Visitor>
-    typename Visitor::return_value id2type_cast( id_type n, const Visitor &visitor )
+    template<class TypeList, class Functor>
+    typename Functor::return_value id2type_cast( id_type n, const Functor &functor )
     {
-        return id2type_cast<TypeList>( n, visitor, static_cast<const void *>(0) ); 
+        return id2type_cast<TypeList>( n, functor, static_cast<const void *>(0) ); 
     }
 
-    template<class TypeList, class Visitor, class Base>
-    typename Visitor::return_value id2type_cast( id_type n, Base *type )
+    template<class TypeList, class Functor, class Base>
+    typename Functor::return_value id2type_cast( id_type n, Base *type )
     {
-        const Visitor visitor = Visitor();
-        return id2type_cast<TypeList>( n, visitor, type ); 
+        const Functor functor = Functor();
+        return id2type_cast<TypeList>( n, functor, type ); 
     }
 
-    template<class TypeList, class Visitor>
-    typename Visitor::return_value id2type_cast( id_type n )
+    template<class TypeList, class Functor>
+    typename Functor::return_value id2type_cast( id_type n )
     {
-        const Visitor visitor = Visitor();
-        return id2type_cast<TypeList>( n, visitor, static_cast<const void *>(0) ); 
+        const Functor functor = Functor();
+        return id2type_cast<TypeList>( n, functor, static_cast<const void *>(0) ); 
     }
 }
 

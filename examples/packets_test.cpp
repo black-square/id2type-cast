@@ -111,29 +111,29 @@ struct PacketTypes: i2tc::type_list::base<ImplTag>
     template <int N> struct at { typedef typename at_impl<N>::type type; };
 };
 
-struct CallVisitor: i2tc::visitor_base<int>
+struct CallFunctor: i2tc::function<int>
 {
     template<int N>
-    int exec( const Packet<N> *t ) const
+    int operator()( const Packet<N> *t ) const
     {
         t->print();
         return t->check();
     }
 };
 
-struct CreateVisitor: i2tc::visitor_base<void *>
+struct CreateFunctor: i2tc::function<void *>
 {
     template<int N>
-    void *exec( const Packet<N> * ) const
+    void *operator()( const Packet<N> * ) const
     {
         return new Packet<N>;
     }
 };
 
-struct DestroyVisitor: i2tc::visitor_base<void>
+struct DestroyFunctor: i2tc::function<void>
 {
     template<int N>
-    void exec( Packet<N> *pPacket ) const
+    void operator()( Packet<N> *pPacket ) const
     {
         delete pPacket;
     }
@@ -146,9 +146,9 @@ void test()
 
     const int PacketNum = static_cast<int>(std::time(NULL) % COUNT); 
     
-    void * const ptr = id2type_cast<PT, CreateVisitor>( PacketNum );
-    const int rez = id2type_cast<PT, CallVisitor>( PacketNum, ptr );
-    id2type_cast<PT, DestroyVisitor>( PacketNum, ptr );
+    void * const ptr = id2type_cast<PT, CreateFunctor>( PacketNum );
+    const int rez = id2type_cast<PT, CallFunctor>( PacketNum, ptr );
+    id2type_cast<PT, DestroyFunctor>( PacketNum, ptr );
 
     std::cout << "Result " << rez << std::endl;
 }
