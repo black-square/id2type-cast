@@ -227,6 +227,14 @@
 			RelativePath=".\serialization_test.cpp"
 			>
 		</File>
+		<File
+			RelativePath=".\typelist_max_size_test.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\typelist_max_size_test_impl.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

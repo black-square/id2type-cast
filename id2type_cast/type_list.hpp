@@ -19,6 +19,14 @@ namespace type_list {
 
 struct finish_tag {};
 
+namespace detail
+{
+    struct base
+    {
+        typedef finish_tag size;
+    };
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // boost:mpl::at
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,7 +35,14 @@ struct at
 {
     typedef typename TypeList::template at<N>::type type;
 };
+///////////////////////////////////////////////////////////////////////////////
 
+template<class TypeList, id_type N>
+struct is_valid
+{
+    typedef typename TypeList::template at<N>::type cur_type;
+    enum { value = !i2tc::detail::is_same_type<cur_type, finish_tag>::value };
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // boost:mpl::size
@@ -47,12 +62,25 @@ namespace detail
     {
         enum { value = 0 };
     };
+    
+    template<class TypeList, bool HasEmbededSize>
+    struct size
+    {
+        enum { value = detail::size_impl<TypeList, 0, false>::value };
+    };
+    
+    template<class TypeList>
+    struct size< TypeList, true >
+    {
+        enum { value = TypeList::size::value };
+    };    
 }
 
 template<class TypeList>
 struct size
 {
-    enum { value = detail::size_impl<TypeList, 0, false>::value };
+    enum { has_embeded_size = !i2tc::detail::is_same_type<typename TypeList::size, finish_tag>::value };    
+    enum { value = detail::size<TypeList, has_embeded_size>::value };
 };
 
 ///////////////////////////////////////////////////////////////////////////////

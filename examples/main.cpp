@@ -5,13 +5,15 @@
 
 void packetsTest();
 void serializationTest();
+void maxTypeListSize();
 
 int main()
 {
     packetsTest(); 
-
     std::cout << "\n-------------------------------\n" << std::endl;
     serializationTest();
+    std::cout << "\n-------------------------------\n" << std::endl;
+    maxTypeListSize();
     std::cout << "\n-------------------------------\n" << std::endl;
 
     std::cin.get();

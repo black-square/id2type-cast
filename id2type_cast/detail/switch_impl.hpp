@@ -6,7 +6,7 @@
 
 
 #ifndef ID2TYPE_CAST_SWICTH_IMPL_MAX_TYPES
-    #define ID2TYPE_CAST_SWICTH_IMPL_MAX_TYPES 100
+    #define ID2TYPE_CAST_SWICTH_IMPL_MAX_TYPES 50
 #endif
 
 namespace i2tc { namespace detail {
@@ -40,6 +40,7 @@ public:
 private:
     static return_value error_func()
     {
+        assert(false);
         return return_value();
     }
 
@@ -64,7 +65,7 @@ private:
     {
         return cast_impl_impl<N>( functor, type, 
             typename detail::select<
-                (N < types_count), 
+            (N < types_count) && type_list::is_valid<TypeList, N>::value, 
                 detail::int2type<true>, 
                 detail::int2type<false> 
             >::result() 

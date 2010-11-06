@@ -24,20 +24,21 @@ void call_f2( const type_info &ti, A *pA )
     f2( static_cast<rev_typeid(ti) *>(pA) );
 }
 
-struct F
-{ 
-    template<class T> void operator()( T * );
+template<class Result>
+struct function
+{
+    typedef Result result_type;
 };
 
-struct F2
+struct F: function<void>
 { 
     template<class T> void operator()( T * );
 };
 
 template<class T, class Func>
-void call( const type_info &ti, T *p, Func f )
+typename Func::result_type call( const type_info &ti, T *p, Func f )
 {
-    f( static_cast<rev_typeid(ti) *>(p) );
+    return f( static_cast<rev_typeid(ti) *>(p) );
 }
 
 int main()
@@ -48,5 +49,4 @@ int main()
     call_f2( ti, pA );
     
     call( ti, pA, F() );
-    call( ti, pA, F2() );
 }

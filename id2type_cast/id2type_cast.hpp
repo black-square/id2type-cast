@@ -31,7 +31,7 @@ namespace i2tc
     namespace type_list
     {
         template<class ImplTag = switch_impl_tag>
-        struct base
+        struct base: detail::base
         {
             typedef ImplTag id2type_cast_impl_tag;
         };
