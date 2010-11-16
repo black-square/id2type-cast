@@ -49,17 +49,15 @@ typedef std::vector<IData *> TDataContainer;
 typedef std::vector<IData *>::const_iterator TDataConstIterator;
 
 void calcStat( const TDataContainer &vecData, IStatistics *pStat )
-{
-    std::for_each( vecData.begin(), vecData.end(), std::bind2nd(std::mem_fun(&IData::processStatistics), pStat ) );
-    
-    std::cout << "======= " << std::endl;
-    
+{       
     for( 
         TDataConstIterator iter = vecData.begin(); 
         iter != vecData.end(); 
         ++iter 
     )
         (*iter)->processStatistics(pStat);
+        
+    std::cout << "======= " << std::endl;
 }
 
 int main()

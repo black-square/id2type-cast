@@ -24,6 +24,8 @@ namespace detail
     struct base
     {
         typedef finish_tag size;
+        
+        //TODO: Добавить возможность явной поддержки index_of
     };
 }
 
