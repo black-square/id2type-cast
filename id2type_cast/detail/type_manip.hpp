@@ -21,6 +21,7 @@ namespace i2tc { namespace detail {
     {
         typedef T result;
     };
+    
     template <typename T, typename U>
     struct select<false, T, U>
     {

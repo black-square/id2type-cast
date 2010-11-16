@@ -6,7 +6,7 @@
 
 using i2tc::id2type_cast;
 
-#if 0
+#if 1
     typedef i2tc::virt_func_tag emb_type_id_impl;
 #else
     typedef i2tc::member_tag emb_type_id_impl;
@@ -19,7 +19,7 @@ struct BaseData: i2tc::embedded_type_id_base<DataTypes, emb_type_id_impl>
     virtual ~BaseData() {}
 };
 
-struct AData: i2tc::embedded_type_id_derived<AData, BaseData, emb_type_id_impl>
+struct AData: i2tc::embedded_type_id_derived<AData, BaseData>
 {
     short a;
 
@@ -33,7 +33,7 @@ struct AData: i2tc::embedded_type_id_derived<AData, BaseData, emb_type_id_impl>
     }
 };
 
-struct BData: i2tc::embedded_type_id_derived<BData, BaseData, emb_type_id_impl>
+struct BData: i2tc::embedded_type_id_derived<BData, BaseData>
 {
     long d;
     double e;
@@ -48,7 +48,7 @@ struct BData: i2tc::embedded_type_id_derived<BData, BaseData, emb_type_id_impl>
     }
 };
 
-struct CData: i2tc::embedded_type_id_derived<CData, BaseData, emb_type_id_impl>
+struct CData: i2tc::embedded_type_id_derived<CData, BaseData>
 {
     float g;
     unsigned short h;

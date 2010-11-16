@@ -13,8 +13,11 @@ struct member_tag {};
 template<class TypeList, class ImplTag = virt_func_tag>
 class embedded_type_id_base;
 
-template<class Derived, class Base, class ImplTag = virt_func_tag>
-class embedded_type_id_derived;
+namespace detail
+{
+    template<class Derived, class Base, class ImplTag>
+    class embedded_type_id_derived_impl;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +25,7 @@ template<class TypeList>
 class embedded_type_id_base <TypeList, member_tag>
 {
 public:
+    typedef member_tag i2tc_impl_tag;
     typedef TypeList i2tc_type_list;
     id_type i2tc_get_id() const { return m_typeId; }
 
@@ -31,27 +35,31 @@ protected:
 
 private:
     template<class Derived, class Base, class ImplTag>
-    friend class embedded_type_id_derived;
+    friend class detail::embedded_type_id_derived_impl;
 
     id_type m_typeId;
 };
 ///////////////////////////////////////////////////////////////////////////////
 
-template< class Derived, class Base >
-class embedded_type_id_derived<Derived, Base, member_tag>: public Base
+namespace detail
 {
-public:
-    embedded_type_id_derived() 
-    { 
-        static_cast<Derived *>(this)->m_typeId = i2tc::type_list::index_of<typename Derived::i2tc_type_list, Derived>::value; 
-    }
-};
+    template< class Derived, class Base >
+    class embedded_type_id_derived_impl<Derived, Base, member_tag>: public Base
+    {
+    public:
+        embedded_type_id_derived_impl() 
+        { 
+            static_cast<Derived *>(this)->m_typeId = i2tc::type_list::index_of<typename Derived::i2tc_type_list, Derived>::value; 
+        }
+    };
+}
 ///////////////////////////////////////////////////////////////////////////////
 
 template<class TypeList>
 class embedded_type_id_base <TypeList, virt_func_tag>
 {
 public: 
+    typedef virt_func_tag i2tc_impl_tag;
     typedef TypeList i2tc_type_list;
     virtual id_type i2tc_get_id() const = 0;
 
@@ -61,21 +69,31 @@ protected:
 };
 ///////////////////////////////////////////////////////////////////////////////
 
-template< class Derived, class Base >
-class embedded_type_id_derived<Derived, Base, virt_func_tag>: public Base
+namespace detail
 {
-public:
-    id_type i2tc_get_id() const 
-    { 
-        return i2tc::type_list::index_of<typename Derived::i2tc_type_list, Derived>::value; 
-    }
-};
+    template< class Derived, class Base >
+    class embedded_type_id_derived_impl<Derived, Base, virt_func_tag>: public Base
+    {
+    public:
+        id_type i2tc_get_id() const 
+        { 
+            return i2tc::type_list::index_of<typename Derived::i2tc_type_list, Derived>::value; 
+        }
+    };
+}
+///////////////////////////////////////////////////////////////////////////////
+
+template<class Derived, class Base>
+class embedded_type_id_derived: 
+    public detail::embedded_type_id_derived_impl<Derived, Base, typename Base::i2tc_impl_tag>
+{};
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace detail
 {
     ///////////////////////////////////////////////////////////////////////////////
-    //  Loki::Conversion
+    // Loki::Conversion
+    // boost::is_convertible 
     ///////////////////////////////////////////////////////////////////////////////
     template< class T>
     struct is_embedded_type_id
