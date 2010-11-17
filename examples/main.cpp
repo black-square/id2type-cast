@@ -6,9 +6,12 @@
 void packetsTest();
 void serializationTest();
 void maxTypeListSize();
+void testOptimizations();
 
 int main()
 {
+    testOptimizations();
+    std::cout << "\n-------------------------------\n" << std::endl;
     packetsTest(); 
     std::cout << "\n-------------------------------\n" << std::endl;
     serializationTest();
