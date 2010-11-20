@@ -17,13 +17,13 @@ typedef int id_type;
 
 namespace type_list {
 
-struct finish_tag {};
+struct undefined_tag {};
 
 namespace detail
 {
     struct base
     {
-        typedef finish_tag size;
+        typedef undefined_tag size;
         
         //TODO: Добавить возможность явной поддержки index_of
     };
@@ -43,7 +43,7 @@ template<class TypeList, id_type N>
 struct is_valid
 {
     typedef typename TypeList::template at<N>::type cur_type;
-    enum { value = !i2tc::detail::is_same_type<cur_type, finish_tag>::value };
+    enum { value = !i2tc::detail::is_same_type<cur_type, undefined_tag>::value };
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,8 +54,7 @@ namespace detail
     template<class TypeList, id_type N, bool StopRecursion>
     struct size_impl
     {
-        typedef typename TypeList::template at<N>::type cur_type;
-        enum { is_last_type = i2tc::detail::is_same_type<cur_type, finish_tag>::value };
+        enum { is_last_type = !is_valid<TypeList, N>::value };
         enum { value = is_last_type ? N : size_impl<TypeList, N + 1, is_last_type>::value }; 
     };
 
@@ -81,7 +80,7 @@ namespace detail
 template<class TypeList>
 struct size
 {
-    enum { has_embeded_size = !i2tc::detail::is_same_type<typename TypeList::size, finish_tag>::value };    
+    enum { has_embeded_size = !i2tc::detail::is_same_type<typename TypeList::size, undefined_tag>::value };    
     enum { value = detail::size<TypeList, has_embeded_size>::value };
 };
 
@@ -95,7 +94,7 @@ namespace detail
     {
         typedef typename TypeList::template at<N>::type type;
 
-        enum { is_last_type = i2tc::detail::is_same_type<type, finish_tag>::value };
+        enum { is_last_type = !is_valid<TypeList, N>::value };
         enum { is_type_finished = i2tc::detail::is_same_type<type, T>::value };
         enum { need_stop_recursion = is_last_type || is_type_finished };
 

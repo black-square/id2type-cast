@@ -7,7 +7,7 @@ struct DataTypes: i2tc::type_list::base<i2tc::table_impl_tag>
     struct size;
     template <int N> struct at; 
 };
-template <int N> struct DataTypes::at{ typedef i2tc::type_list::finish_tag type; };
+template <int N> struct DataTypes::at{ typedef i2tc::type_list::undefined_tag type; };
 
 ////////////////////////////////////
 // Maple:

@@ -45,7 +45,7 @@ struct DataTypes: i2tc::type_list::base<>
     template <int N> struct at;
 };
 
-template <int N> struct DataTypes::at{ typedef i2tc::type_list::finish_tag type; };
+template <int N> struct DataTypes::at{ typedef i2tc::type_list::undefined_tag type; };
 template <> struct DataTypes::at<0>{ typedef AData type; };
 template <> struct DataTypes::at<1>{ typedef BData type; };
 template <> struct DataTypes::at<2>{ typedef CData type; };

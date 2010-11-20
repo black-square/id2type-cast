@@ -103,7 +103,7 @@ template<> struct Packet<CREATE_BUILDING>
 };
 
 template <int N> struct at_impl { typedef Packet<N> type; };
-template <> struct at_impl<COUNT> { typedef i2tc::type_list::finish_tag type; };
+template <> struct at_impl<COUNT> { typedef i2tc::type_list::undefined_tag type; };
 
 template<class ImplTag>
 struct PacketTypes: i2tc::type_list::base<ImplTag>
