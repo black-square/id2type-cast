@@ -61,7 +61,7 @@ namespace detail
     template<class TypeList, id_type N>
     struct size_impl< TypeList, N, true >
     {
-        enum { value = 0 };
+        enum { value = -1 };
     };
     
     template<class TypeList, bool HasEmbededSize>
@@ -95,10 +95,10 @@ namespace detail
         typedef typename TypeList::template at<N>::type type;
 
         enum { is_last_type = !is_valid<TypeList, N>::value };
-        enum { is_type_finished = i2tc::detail::is_same_type<type, T>::value };
-        enum { need_stop_recursion = is_last_type || is_type_finished };
+        enum { is_type_found = i2tc::detail::is_same_type<type, T>::value };
+        enum { need_stop_recursion = is_last_type || is_type_found };
 
-        enum { value = is_type_finished ? N : index_of_impl<TypeList, T, N + 1, need_stop_recursion>::value };
+        enum { value = is_type_found ? N : index_of_impl<TypeList, T, N + 1, need_stop_recursion>::value };
     };
 
     template<class TypeList, class T, id_type N>
