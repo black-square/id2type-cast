@@ -9,9 +9,6 @@
 
 using i2tc::id2type_cast;
 
-namespace
-{
-
 struct DataTypes;
 
 struct Base: i2tc::embedded_type_id_base<DataTypes, i2tc::member_tag>
@@ -39,6 +36,14 @@ struct CData: i2tc::embedded_type_id_derived<CData, Base>
 
     std::vector<int> l;
 };
+
+void testPointOfInstation()
+{
+  //см. point_of_instation_trick.cpp
+  CData data;
+  std::cout << data.i2tc_get_id() << std::endl;
+}
+
 
 struct DataTypes: i2tc::type_list::base<>
 {
@@ -68,7 +73,6 @@ struct TestFunctor: i2tc::function<int>
     }
 };
 
-}
 
 int testOptimizationsImpl( Base *p )
 {
@@ -76,7 +80,9 @@ int testOptimizationsImpl( Base *p )
 }
 
 void testOptimizations()
-{
+{    
+    testPointOfInstation();
+    
     Base * const data[] = { new AData, new BData, new CData };
     int rez = 0;
 
